@@ -1,0 +1,182 @@
+#MAIN WINDOW
+
+import turtle
+import winsound
+
+
+mwn=turtle.Screen()
+mwn.title("PONG GAME")
+mwn.bgcolor("black")
+mwn.setup(width=800 , height=600)
+mwn.bgpic("turtleimage.gif")
+mwn.tracer(0)
+
+
+#Score Variable
+
+scoree_a = 0
+scoree_b = 0
+
+#Paddle A
+
+paddle_a=turtle.Turtle()
+paddle_a.speed(0)
+paddle_a.shape("square")
+paddle_a.color("white")
+paddle_a.shapesize(stretch_wid=5 , stretch_len=1)
+paddle_a.penup()
+paddle_a.goto(-350,0)
+
+#Paddle B
+
+paddle_b=turtle.Turtle()
+paddle_b.speed(0)
+paddle_b.shape("square")
+paddle_b.color("white")
+paddle_b.shapesize(stretch_wid=5 , stretch_len=1)
+paddle_b.penup()
+paddle_b.goto(350,0)
+
+
+#Ball
+
+ball=turtle.Turtle()
+ball.speed(0)
+ball.color("white")
+ball.shape("circle")
+ball.penup()
+ball.goto(0,0)
+ball.dx=5
+ball.dy=5
+
+#ScoreLine
+
+scoree=turtle.Turtle()
+scoree.color("white")
+scoree.penup()
+scoree.speed(0)
+scoree.hideturtle()
+scoree.goto(0,260)
+scoree.write("Player A : 0    Player B : 0", align="center",font=("Courier",24,"normal"))
+
+
+#Functions
+
+def paddle_a_up():
+    y=paddle_a.ycor()
+    y+= 20
+    paddle_a.sety(y)
+
+def paddle_a_down():
+    y=paddle_a.ycor()
+    y=y-20
+    paddle_a.sety(y)
+
+def paddle_b_up():
+    y=paddle_b.ycor()
+    y=y+20
+    paddle_b.sety(y)
+
+
+def paddle_b_down():
+    y=paddle_b.ycor()
+    y=y-20
+    paddle_b.sety(y)
+
+
+
+# Keys
+mwn.listen()
+mwn.onkeypress(paddle_a_up, "w")
+mwn.onkeypress(paddle_a_down, "s")
+mwn.onkeypress(paddle_b_up, "Up")
+mwn.onkeypress(paddle_b_down, "Down")
+
+
+
+#Main Game Loop
+while True:
+    mwn.update()
+    #Ball move
+    ball.setx(ball.xcor() + ball.dx)
+    ball.sety(ball.ycor() + ball.dy)
+
+    #BORDERS
+    if ball.ycor() >290:
+        ball.sety(290)
+        ball.dy *= -1
+        winsound.PlaySound(r"C:\Users\The laptop store\Downloads\bounce.wav", winsound.SND_ASYNC)
+
+
+    if ball.ycor() < -290:
+        ball.sety(-290)
+        ball.dy *= -1
+        winsound.PlaySound(r"C:\Users\The laptop store\Downloads\bounce.wav", winsound.SND_ASYNC)
+
+    if ball.xcor() > 390:
+        ball.goto(0,0)
+        ball.dx *= -1
+        scoree.clear()
+        scoree_a += 1
+        scoree.write("Player A : {}    Player B : {}".format(scoree_a , scoree_b), align="center", font=("Courier", 24, "normal"))
+
+
+
+
+    if ball.xcor() < -390:
+        ball.goto(0, 0)
+        ball.dx *= -1
+        scoree.clear()
+        scoree_b += 1
+        scoree.write("Player A : {}    Player B : {}".format(scoree_a,scoree_b), align="center", font=("Courier", 24, "normal"))
+
+
+
+    #COLLISION
+    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < paddle_b.ycor() + 50 and ball.ycor() > paddle_b.ycor() - 50):
+        ball.setx(340)
+        ball.dx *=-1
+        winsound.PlaySound(r"C:\Users\The laptop store\Downloads\bounce.wav",winsound.SND_ASYNC)
+
+
+    if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < paddle_a.ycor() + 50 and ball.ycor() > paddle_a.ycor() - 50):
+        ball.setx(-340)
+        ball.dx *= -1
+        winsound.PlaySound(r"C:\Users\The laptop store\Downloads\bounce.wav", winsound.SND_ASYNC)
+
+    while (scoree_a>7 or scoree_b>7):
+        mwn.bye()
+        if scoree_a>7:
+            winn=turtle.Screen()
+            winn.title("Congratulation")
+            winn.bgcolor("black")
+            winn.setup(width=800, height=600)
+            winn.tracer(0)
+
+            X2=turtle.Turtle()
+           X2.speed(0)
+            X2.color("white")
+            X2.penup()
+            X2.hideturtle()
+            X2.goto(0, -100)
+            X2.write("Congradulation\n Player A WINS\n \U0001F919", align="center", font=("Broadway", 50, "normal"))
+
+
+            winn.mainloop()
+
+        if scoree_b>7:
+            winn=turtle.Screen()
+            winn.title("Congratulation")
+            winn.bgcolor("black")
+            winn.setup(width=800, height=600)
+            winn.tracer(0)
+
+            X2=turtle.Turtle()
+            X2.speed(0)
+            X2.color("white")
+            X2.penup()
+            X2.hideturtle()
+            X2.goto(0,-100)
+            X2.write("Congradulation\n Player B WINS\n \U0001F919",align="center",font=("Broadway",50,"normal"))
+
+            winn.mainloop()
